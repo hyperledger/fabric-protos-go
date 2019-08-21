@@ -6,4 +6,5 @@ CONTRIBUTING.md
 LICENSE
 README.md
 azure-pipelines.yml
+doc.go
 go.mod
