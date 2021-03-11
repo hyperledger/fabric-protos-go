@@ -26,210 +26,398 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
-// Result is the value that is returned by the transaction function.
-type Result struct {
-	// The byte array returned from the chaincode invocation.
-	Value                []byte   `protobuf:"bytes,1,opt,name=value,proto3" json:"value,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
+// EndorseRequest contains the details required to obtain sufficient endorsements for a
+// transaction to be committed to the ledger.
+type EndorseRequest struct {
+	// The unique identifier for the transaction.
+	TransactionId string `protobuf:"bytes,1,opt,name=transaction_id,json=transactionId,proto3" json:"transaction_id,omitempty"`
+	// Identifier of the channel this request is bound for.
+	ChannelId string `protobuf:"bytes,2,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty"`
+	// The signed proposal ready for endorsement.
+	ProposedTransaction  *peer.SignedProposal `protobuf:"bytes,3,opt,name=proposed_transaction,json=proposedTransaction,proto3" json:"proposed_transaction,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
+	XXX_unrecognized     []byte               `json:"-"`
+	XXX_sizecache        int32                `json:"-"`
 }
 
-func (m *Result) Reset()         { *m = Result{} }
-func (m *Result) String() string { return proto.CompactTextString(m) }
-func (*Result) ProtoMessage()    {}
-func (*Result) Descriptor() ([]byte, []int) {
+func (m *EndorseRequest) Reset()         { *m = EndorseRequest{} }
+func (m *EndorseRequest) String() string { return proto.CompactTextString(m) }
+func (*EndorseRequest) ProtoMessage()    {}
+func (*EndorseRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_285396c8df15061f, []int{0}
 }
 
-func (m *Result) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_Result.Unmarshal(m, b)
+func (m *EndorseRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_EndorseRequest.Unmarshal(m, b)
 }
-func (m *Result) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_Result.Marshal(b, m, deterministic)
+func (m *EndorseRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_EndorseRequest.Marshal(b, m, deterministic)
 }
-func (m *Result) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Result.Merge(m, src)
+func (m *EndorseRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_EndorseRequest.Merge(m, src)
 }
-func (m *Result) XXX_Size() int {
-	return xxx_messageInfo_Result.Size(m)
+func (m *EndorseRequest) XXX_Size() int {
+	return xxx_messageInfo_EndorseRequest.Size(m)
 }
-func (m *Result) XXX_DiscardUnknown() {
-	xxx_messageInfo_Result.DiscardUnknown(m)
+func (m *EndorseRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_EndorseRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_Result proto.InternalMessageInfo
+var xxx_messageInfo_EndorseRequest proto.InternalMessageInfo
 
-func (m *Result) GetValue() []byte {
+func (m *EndorseRequest) GetTransactionId() string {
 	if m != nil {
-		return m.Value
+		return m.TransactionId
+	}
+	return ""
+}
+
+func (m *EndorseRequest) GetChannelId() string {
+	if m != nil {
+		return m.ChannelId
+	}
+	return ""
+}
+
+func (m *EndorseRequest) GetProposedTransaction() *peer.SignedProposal {
+	if m != nil {
+		return m.ProposedTransaction
 	}
 	return nil
 }
 
-// ProposedTransaction contains the signed proposal ready for endorsement plus any processing options.
-type ProposedTransaction struct {
-	// The signed proposal.
-	Proposal *peer.SignedProposal `protobuf:"bytes,1,opt,name=proposal,proto3" json:"proposal,omitempty"`
-	// Other options will be added here.  The following are experimental at the moment.
-	TxId                 string   `protobuf:"bytes,2,opt,name=tx_id,json=txId,proto3" json:"tx_id,omitempty"`
-	ChannelId            string   `protobuf:"bytes,3,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
+// EndorseResponse returns the result of endorsing a transaction.
+type EndorseResponse struct {
+	// The response that is returned by the transaction function, as defined
+	// in peer/proposal_response.proto
+	Result *peer.Response `protobuf:"bytes,1,opt,name=result,proto3" json:"result,omitempty"`
+	// The unsigned set of transaction responses from the endorsing peers for signing by the client
+	// before submitting to ordering service (via gateway).
+	PreparedTransaction  *common.Envelope `protobuf:"bytes,2,opt,name=prepared_transaction,json=preparedTransaction,proto3" json:"prepared_transaction,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}         `json:"-"`
+	XXX_unrecognized     []byte           `json:"-"`
+	XXX_sizecache        int32            `json:"-"`
 }
 
-func (m *ProposedTransaction) Reset()         { *m = ProposedTransaction{} }
-func (m *ProposedTransaction) String() string { return proto.CompactTextString(m) }
-func (*ProposedTransaction) ProtoMessage()    {}
-func (*ProposedTransaction) Descriptor() ([]byte, []int) {
+func (m *EndorseResponse) Reset()         { *m = EndorseResponse{} }
+func (m *EndorseResponse) String() string { return proto.CompactTextString(m) }
+func (*EndorseResponse) ProtoMessage()    {}
+func (*EndorseResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_285396c8df15061f, []int{1}
 }
 
-func (m *ProposedTransaction) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_ProposedTransaction.Unmarshal(m, b)
+func (m *EndorseResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_EndorseResponse.Unmarshal(m, b)
 }
-func (m *ProposedTransaction) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_ProposedTransaction.Marshal(b, m, deterministic)
+func (m *EndorseResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_EndorseResponse.Marshal(b, m, deterministic)
 }
-func (m *ProposedTransaction) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ProposedTransaction.Merge(m, src)
+func (m *EndorseResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_EndorseResponse.Merge(m, src)
 }
-func (m *ProposedTransaction) XXX_Size() int {
-	return xxx_messageInfo_ProposedTransaction.Size(m)
+func (m *EndorseResponse) XXX_Size() int {
+	return xxx_messageInfo_EndorseResponse.Size(m)
 }
-func (m *ProposedTransaction) XXX_DiscardUnknown() {
-	xxx_messageInfo_ProposedTransaction.DiscardUnknown(m)
+func (m *EndorseResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_EndorseResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_ProposedTransaction proto.InternalMessageInfo
+var xxx_messageInfo_EndorseResponse proto.InternalMessageInfo
 
-func (m *ProposedTransaction) GetProposal() *peer.SignedProposal {
+func (m *EndorseResponse) GetResult() *peer.Response {
 	if m != nil {
-		return m.Proposal
+		return m.Result
 	}
 	return nil
 }
 
-func (m *ProposedTransaction) GetTxId() string {
+func (m *EndorseResponse) GetPreparedTransaction() *common.Envelope {
 	if m != nil {
-		return m.TxId
+		return m.PreparedTransaction
 	}
-	return ""
+	return nil
 }
 
-func (m *ProposedTransaction) GetChannelId() string {
-	if m != nil {
-		return m.ChannelId
-	}
-	return ""
+// SubmitRequest contains the details required to submit a transaction (update the ledger).
+type SubmitRequest struct {
+	// Identifier of the transaction to submit.
+	TransactionId string `protobuf:"bytes,1,opt,name=transaction_id,json=transactionId,proto3" json:"transaction_id,omitempty"`
+	// Identifier of the channel this request is bound for.
+	ChannelId string `protobuf:"bytes,2,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty"`
+	// The signed set of endorsed transaction responses to submit.
+	PreparedTransaction  *common.Envelope `protobuf:"bytes,3,opt,name=prepared_transaction,json=preparedTransaction,proto3" json:"prepared_transaction,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}         `json:"-"`
+	XXX_unrecognized     []byte           `json:"-"`
+	XXX_sizecache        int32            `json:"-"`
 }
 
-// PreparedTransaction contains the set of transaction responses from the endorsing peers for signing by the client
-// before submitting to ordering service (via gateway).
-type PreparedTransaction struct {
-	// The transaction envelope.
-	Envelope *common.Envelope `protobuf:"bytes,1,opt,name=envelope,proto3" json:"envelope,omitempty"`
-	// The value that is returned by the transaction function during endorsement.
-	Response *Result `protobuf:"bytes,2,opt,name=response,proto3" json:"response,omitempty"`
-	// The following fields are pulled out of the envelope to the top level for convenience to the client.
-	TxId                 string   `protobuf:"bytes,3,opt,name=tx_id,json=txId,proto3" json:"tx_id,omitempty"`
-	ChannelId            string   `protobuf:"bytes,4,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *PreparedTransaction) Reset()         { *m = PreparedTransaction{} }
-func (m *PreparedTransaction) String() string { return proto.CompactTextString(m) }
-func (*PreparedTransaction) ProtoMessage()    {}
-func (*PreparedTransaction) Descriptor() ([]byte, []int) {
+func (m *SubmitRequest) Reset()         { *m = SubmitRequest{} }
+func (m *SubmitRequest) String() string { return proto.CompactTextString(m) }
+func (*SubmitRequest) ProtoMessage()    {}
+func (*SubmitRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_285396c8df15061f, []int{2}
 }
 
-func (m *PreparedTransaction) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_PreparedTransaction.Unmarshal(m, b)
+func (m *SubmitRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SubmitRequest.Unmarshal(m, b)
 }
-func (m *PreparedTransaction) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_PreparedTransaction.Marshal(b, m, deterministic)
+func (m *SubmitRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SubmitRequest.Marshal(b, m, deterministic)
 }
-func (m *PreparedTransaction) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_PreparedTransaction.Merge(m, src)
+func (m *SubmitRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SubmitRequest.Merge(m, src)
 }
-func (m *PreparedTransaction) XXX_Size() int {
-	return xxx_messageInfo_PreparedTransaction.Size(m)
+func (m *SubmitRequest) XXX_Size() int {
+	return xxx_messageInfo_SubmitRequest.Size(m)
 }
-func (m *PreparedTransaction) XXX_DiscardUnknown() {
-	xxx_messageInfo_PreparedTransaction.DiscardUnknown(m)
+func (m *SubmitRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_SubmitRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_PreparedTransaction proto.InternalMessageInfo
+var xxx_messageInfo_SubmitRequest proto.InternalMessageInfo
 
-func (m *PreparedTransaction) GetEnvelope() *common.Envelope {
+func (m *SubmitRequest) GetTransactionId() string {
 	if m != nil {
-		return m.Envelope
-	}
-	return nil
-}
-
-func (m *PreparedTransaction) GetResponse() *Result {
-	if m != nil {
-		return m.Response
-	}
-	return nil
-}
-
-func (m *PreparedTransaction) GetTxId() string {
-	if m != nil {
-		return m.TxId
+		return m.TransactionId
 	}
 	return ""
 }
 
-func (m *PreparedTransaction) GetChannelId() string {
+func (m *SubmitRequest) GetChannelId() string {
 	if m != nil {
 		return m.ChannelId
 	}
 	return ""
 }
 
-// Event contains the data returned in the stream from the Submit service.
-// This is currently experimental and highly likely to change during gateway development.
-type Event struct {
-	Value                []byte   `protobuf:"bytes,1,opt,name=value,proto3" json:"value,omitempty"`
+func (m *SubmitRequest) GetPreparedTransaction() *common.Envelope {
+	if m != nil {
+		return m.PreparedTransaction
+	}
+	return nil
+}
+
+// SubmitResponse returns the result of submitting a transaction.
+type SubmitResponse struct {
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *Event) Reset()         { *m = Event{} }
-func (m *Event) String() string { return proto.CompactTextString(m) }
-func (*Event) ProtoMessage()    {}
-func (*Event) Descriptor() ([]byte, []int) {
+func (m *SubmitResponse) Reset()         { *m = SubmitResponse{} }
+func (m *SubmitResponse) String() string { return proto.CompactTextString(m) }
+func (*SubmitResponse) ProtoMessage()    {}
+func (*SubmitResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_285396c8df15061f, []int{3}
 }
 
-func (m *Event) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_Event.Unmarshal(m, b)
+func (m *SubmitResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SubmitResponse.Unmarshal(m, b)
 }
-func (m *Event) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_Event.Marshal(b, m, deterministic)
+func (m *SubmitResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SubmitResponse.Marshal(b, m, deterministic)
 }
-func (m *Event) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Event.Merge(m, src)
+func (m *SubmitResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SubmitResponse.Merge(m, src)
 }
-func (m *Event) XXX_Size() int {
-	return xxx_messageInfo_Event.Size(m)
+func (m *SubmitResponse) XXX_Size() int {
+	return xxx_messageInfo_SubmitResponse.Size(m)
 }
-func (m *Event) XXX_DiscardUnknown() {
-	xxx_messageInfo_Event.DiscardUnknown(m)
+func (m *SubmitResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_SubmitResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_Event proto.InternalMessageInfo
+var xxx_messageInfo_SubmitResponse proto.InternalMessageInfo
 
-func (m *Event) GetValue() []byte {
+// CommitStatusRequest contains the details required to check whether a transaction has been
+// successfully committed.
+type CommitStatusRequest struct {
+	// Identifier of the transaction to check.
+	TransactionId string `protobuf:"bytes,1,opt,name=transaction_id,json=transactionId,proto3" json:"transaction_id,omitempty"`
+	// Identifier of the channel this request is bound for.
+	ChannelId            string   `protobuf:"bytes,2,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *CommitStatusRequest) Reset()         { *m = CommitStatusRequest{} }
+func (m *CommitStatusRequest) String() string { return proto.CompactTextString(m) }
+func (*CommitStatusRequest) ProtoMessage()    {}
+func (*CommitStatusRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_285396c8df15061f, []int{4}
+}
+
+func (m *CommitStatusRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CommitStatusRequest.Unmarshal(m, b)
+}
+func (m *CommitStatusRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CommitStatusRequest.Marshal(b, m, deterministic)
+}
+func (m *CommitStatusRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CommitStatusRequest.Merge(m, src)
+}
+func (m *CommitStatusRequest) XXX_Size() int {
+	return xxx_messageInfo_CommitStatusRequest.Size(m)
+}
+func (m *CommitStatusRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_CommitStatusRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CommitStatusRequest proto.InternalMessageInfo
+
+func (m *CommitStatusRequest) GetTransactionId() string {
 	if m != nil {
-		return m.Value
+		return m.TransactionId
+	}
+	return ""
+}
+
+func (m *CommitStatusRequest) GetChannelId() string {
+	if m != nil {
+		return m.ChannelId
+	}
+	return ""
+}
+
+// CommitStatusResponse returns the result of committing a transaction.
+type CommitStatusResponse struct {
+	// The result of the transaction commit, as defined in peer/transaction.proto
+	Result               peer.TxValidationCode `protobuf:"varint,1,opt,name=result,proto3,enum=protos.TxValidationCode" json:"result,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}              `json:"-"`
+	XXX_unrecognized     []byte                `json:"-"`
+	XXX_sizecache        int32                 `json:"-"`
+}
+
+func (m *CommitStatusResponse) Reset()         { *m = CommitStatusResponse{} }
+func (m *CommitStatusResponse) String() string { return proto.CompactTextString(m) }
+func (*CommitStatusResponse) ProtoMessage()    {}
+func (*CommitStatusResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_285396c8df15061f, []int{5}
+}
+
+func (m *CommitStatusResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CommitStatusResponse.Unmarshal(m, b)
+}
+func (m *CommitStatusResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CommitStatusResponse.Marshal(b, m, deterministic)
+}
+func (m *CommitStatusResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CommitStatusResponse.Merge(m, src)
+}
+func (m *CommitStatusResponse) XXX_Size() int {
+	return xxx_messageInfo_CommitStatusResponse.Size(m)
+}
+func (m *CommitStatusResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_CommitStatusResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CommitStatusResponse proto.InternalMessageInfo
+
+func (m *CommitStatusResponse) GetResult() peer.TxValidationCode {
+	if m != nil {
+		return m.Result
+	}
+	return peer.TxValidationCode_VALID
+}
+
+// EvaluateRequest contains the details required to evaluate a transaction (query the ledger).
+type EvaluateRequest struct {
+	// Identifier of the transaction to evaluate.
+	TransactionId string `protobuf:"bytes,1,opt,name=transaction_id,json=transactionId,proto3" json:"transaction_id,omitempty"`
+	// Identifier of the channel this request is bound for.
+	ChannelId string `protobuf:"bytes,2,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty"`
+	// The signed proposal ready for evaluation.
+	ProposedTransaction  *peer.SignedProposal `protobuf:"bytes,3,opt,name=proposed_transaction,json=proposedTransaction,proto3" json:"proposed_transaction,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
+	XXX_unrecognized     []byte               `json:"-"`
+	XXX_sizecache        int32                `json:"-"`
+}
+
+func (m *EvaluateRequest) Reset()         { *m = EvaluateRequest{} }
+func (m *EvaluateRequest) String() string { return proto.CompactTextString(m) }
+func (*EvaluateRequest) ProtoMessage()    {}
+func (*EvaluateRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_285396c8df15061f, []int{6}
+}
+
+func (m *EvaluateRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_EvaluateRequest.Unmarshal(m, b)
+}
+func (m *EvaluateRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_EvaluateRequest.Marshal(b, m, deterministic)
+}
+func (m *EvaluateRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_EvaluateRequest.Merge(m, src)
+}
+func (m *EvaluateRequest) XXX_Size() int {
+	return xxx_messageInfo_EvaluateRequest.Size(m)
+}
+func (m *EvaluateRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_EvaluateRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_EvaluateRequest proto.InternalMessageInfo
+
+func (m *EvaluateRequest) GetTransactionId() string {
+	if m != nil {
+		return m.TransactionId
+	}
+	return ""
+}
+
+func (m *EvaluateRequest) GetChannelId() string {
+	if m != nil {
+		return m.ChannelId
+	}
+	return ""
+}
+
+func (m *EvaluateRequest) GetProposedTransaction() *peer.SignedProposal {
+	if m != nil {
+		return m.ProposedTransaction
+	}
+	return nil
+}
+
+// EvaluateResponse returns the result of evaluating a transaction.
+type EvaluateResponse struct {
+	// The response that is returned by the transaction function, as defined
+	// in peer/proposal_response.proto
+	Result               *peer.Response `protobuf:"bytes,1,opt,name=result,proto3" json:"result,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}       `json:"-"`
+	XXX_unrecognized     []byte         `json:"-"`
+	XXX_sizecache        int32          `json:"-"`
+}
+
+func (m *EvaluateResponse) Reset()         { *m = EvaluateResponse{} }
+func (m *EvaluateResponse) String() string { return proto.CompactTextString(m) }
+func (*EvaluateResponse) ProtoMessage()    {}
+func (*EvaluateResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_285396c8df15061f, []int{7}
+}
+
+func (m *EvaluateResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_EvaluateResponse.Unmarshal(m, b)
+}
+func (m *EvaluateResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_EvaluateResponse.Marshal(b, m, deterministic)
+}
+func (m *EvaluateResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_EvaluateResponse.Merge(m, src)
+}
+func (m *EvaluateResponse) XXX_Size() int {
+	return xxx_messageInfo_EvaluateResponse.Size(m)
+}
+func (m *EvaluateResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_EvaluateResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_EvaluateResponse proto.InternalMessageInfo
+
+func (m *EvaluateResponse) GetResult() *peer.Response {
+	if m != nil {
+		return m.Result
 	}
 	return nil
 }
@@ -256,7 +444,7 @@ func (m *EndpointError) Reset()         { *m = EndpointError{} }
 func (m *EndpointError) String() string { return proto.CompactTextString(m) }
 func (*EndpointError) ProtoMessage()    {}
 func (*EndpointError) Descriptor() ([]byte, []int) {
-	return fileDescriptor_285396c8df15061f, []int{4}
+	return fileDescriptor_285396c8df15061f, []int{8}
 }
 
 func (m *EndpointError) XXX_Unmarshal(b []byte) error {
@@ -299,44 +487,55 @@ func (m *EndpointError) GetMessage() string {
 }
 
 func init() {
-	proto.RegisterType((*Result)(nil), "gateway.Result")
-	proto.RegisterType((*ProposedTransaction)(nil), "gateway.ProposedTransaction")
-	proto.RegisterType((*PreparedTransaction)(nil), "gateway.PreparedTransaction")
-	proto.RegisterType((*Event)(nil), "gateway.Event")
+	proto.RegisterType((*EndorseRequest)(nil), "gateway.EndorseRequest")
+	proto.RegisterType((*EndorseResponse)(nil), "gateway.EndorseResponse")
+	proto.RegisterType((*SubmitRequest)(nil), "gateway.SubmitRequest")
+	proto.RegisterType((*SubmitResponse)(nil), "gateway.SubmitResponse")
+	proto.RegisterType((*CommitStatusRequest)(nil), "gateway.CommitStatusRequest")
+	proto.RegisterType((*CommitStatusResponse)(nil), "gateway.CommitStatusResponse")
+	proto.RegisterType((*EvaluateRequest)(nil), "gateway.EvaluateRequest")
+	proto.RegisterType((*EvaluateResponse)(nil), "gateway.EvaluateResponse")
 	proto.RegisterType((*EndpointError)(nil), "gateway.EndpointError")
 }
 
 func init() { proto.RegisterFile("gateway/gateway.proto", fileDescriptor_285396c8df15061f) }
 
 var fileDescriptor_285396c8df15061f = []byte{
-	// 433 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x84, 0x53, 0x5d, 0x6b, 0xd5, 0x40,
-	0x10, 0x25, 0xb6, 0xf7, 0x6b, 0x5a, 0x3f, 0xd8, 0x58, 0xb9, 0x04, 0x2b, 0xe5, 0x82, 0x50, 0xd0,
-	0x26, 0x12, 0x5f, 0xf4, 0xb5, 0x10, 0xe4, 0xbe, 0x85, 0xd4, 0xa7, 0xbe, 0xc8, 0x26, 0x3b, 0x26,
-	0x81, 0x64, 0x77, 0xd9, 0xdd, 0x5c, 0xdb, 0x07, 0xff, 0x8d, 0x7f, 0xc5, 0xff, 0x25, 0xc9, 0x6e,
-	0xd2, 0x5a, 0xbd, 0xfa, 0xb4, 0xcc, 0x9c, 0x33, 0x33, 0xe7, 0xcc, 0x24, 0x70, 0x52, 0x52, 0x83,
-	0xdf, 0xe8, 0x6d, 0xe4, 0xde, 0x50, 0x2a, 0x61, 0x04, 0x59, 0xb8, 0x30, 0xf0, 0x25, 0xa2, 0x8a,
-	0xa4, 0x12, 0x52, 0x68, 0xda, 0x58, 0x34, 0xf0, 0x0b, 0xd1, 0xb6, 0x82, 0x47, 0xf6, 0xb1, 0xc9,
-	0xcd, 0x2b, 0x98, 0x67, 0xa8, 0xbb, 0xc6, 0x90, 0xe7, 0x30, 0xdb, 0xd1, 0xa6, 0xc3, 0xb5, 0x77,
-	0xe6, 0x9d, 0x1f, 0x67, 0x36, 0xd8, 0x7c, 0x07, 0x3f, 0x1d, 0xda, 0x20, 0xfb, 0xac, 0x28, 0xd7,
-	0xb4, 0x30, 0xb5, 0xe0, 0x24, 0x86, 0xe5, 0xd8, 0x7d, 0xe0, 0x1f, 0xc5, 0x2f, 0x6c, 0x43, 0x1d,
-	0x5e, 0xd5, 0x25, 0x47, 0x96, 0x3a, 0x34, 0x9b, 0x78, 0xc4, 0x87, 0x99, 0xb9, 0xf9, 0x52, 0xb3,
-	0xf5, 0xa3, 0x33, 0xef, 0x7c, 0x95, 0x1d, 0x9a, 0x9b, 0x2d, 0x23, 0xa7, 0x00, 0x45, 0x45, 0x39,
-	0xc7, 0xa6, 0x47, 0x0e, 0x06, 0x64, 0xe5, 0x32, 0x5b, 0xb6, 0xf9, 0xe1, 0xf5, 0xf3, 0x51, 0x52,
-	0xf5, 0xfb, 0xfc, 0xb7, 0xb0, 0x44, 0xbe, 0xc3, 0x46, 0x48, 0x74, 0xf3, 0x9f, 0x85, 0xce, 0x57,
-	0xe2, 0xf2, 0xd9, 0xc4, 0x20, 0x6f, 0x60, 0xa9, 0x50, 0x4b, 0xc1, 0x35, 0x0e, 0xc3, 0x8f, 0xe2,
-	0xa7, 0xe1, 0xb8, 0x39, 0xeb, 0x3e, 0x9b, 0x08, 0x77, 0x32, 0x0f, 0xf6, 0xca, 0x3c, 0x7c, 0x28,
-	0xf3, 0x14, 0x66, 0xc9, 0x0e, 0xf9, 0xbe, 0x25, 0x5e, 0xc3, 0xe3, 0x84, 0x33, 0x29, 0x6a, 0x6e,
-	0x12, 0xa5, 0x84, 0x22, 0x6b, 0x58, 0x50, 0xc6, 0x14, 0x6a, 0x3d, 0x10, 0x57, 0xd9, 0x18, 0x92,
-	0x13, 0x98, 0xb7, 0x5a, 0xde, 0x6d, 0x69, 0xd6, 0x6a, 0xb9, 0x65, 0x7d, 0x41, 0x8b, 0x5a, 0xd3,
-	0x12, 0x9d, 0xac, 0x31, 0x8c, 0x7f, 0x7a, 0xb0, 0xf8, 0x64, 0xbd, 0x90, 0x04, 0x16, 0x09, 0x67,
-	0x42, 0x69, 0x24, 0x2f, 0x27, 0x83, 0x7f, 0x39, 0x5f, 0x70, 0x1f, 0xfd, 0x73, 0xb9, 0x1f, 0x60,
-	0x7e, 0xd5, 0xe5, 0x6d, 0x6d, 0xc8, 0x3f, 0x79, 0xc1, 0x93, 0x09, 0x1d, 0xcc, 0xbf, 0xf3, 0xc8,
-	0x47, 0x58, 0x26, 0xbd, 0x65, 0x6a, 0xfe, 0xa7, 0xe0, 0xe1, 0x01, 0x2e, 0x2b, 0x78, 0x2d, 0x54,
-	0x19, 0x56, 0xb7, 0x12, 0x55, 0x83, 0xac, 0x44, 0x15, 0x7e, 0xa5, 0xb9, 0xaa, 0x8b, 0xf1, 0xbb,
-	0x72, 0xfc, 0xcb, 0x63, 0xe7, 0x36, 0xed, 0xd3, 0xa9, 0x77, 0x1d, 0x95, 0xb5, 0xa9, 0xba, 0xbc,
-	0x3f, 0x7f, 0x74, 0xaf, 0x3a, 0xb2, 0xd5, 0x17, 0xb6, 0xfa, 0xa2, 0x14, 0xe3, 0xbf, 0x92, 0xcf,
-	0x87, 0xd4, 0xfb, 0x5f, 0x01, 0x00, 0x00, 0xff, 0xff, 0x00, 0xcc, 0xaf, 0x0a, 0x45, 0x03, 0x00,
+	// 545 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xcc, 0x54, 0xc1, 0x6b, 0xdb, 0x3e,
+	0x14, 0xc6, 0x29, 0xbf, 0xe4, 0x97, 0xd7, 0x26, 0x0b, 0x4a, 0x9b, 0x66, 0xa6, 0x85, 0x62, 0x28,
+	0xe4, 0xd2, 0x78, 0x64, 0xa7, 0x41, 0x61, 0xd0, 0x10, 0xb6, 0xb0, 0x4b, 0x48, 0xca, 0x0e, 0xdd,
+	0x21, 0x28, 0x91, 0xe6, 0x18, 0x6c, 0x49, 0x93, 0xe4, 0x6e, 0xbd, 0xed, 0x4f, 0xd8, 0x79, 0xb7,
+	0xed, 0x2f, 0x1d, 0xb6, 0xa4, 0xc4, 0x5e, 0xdb, 0x43, 0xa1, 0x87, 0x9d, 0x8c, 0xbe, 0xf7, 0xbe,
+	0xe7, 0xef, 0xbd, 0xf7, 0x49, 0x70, 0x14, 0x61, 0x4d, 0xbf, 0xe2, 0xbb, 0xd0, 0x7e, 0x87, 0x42,
+	0x72, 0xcd, 0x51, 0xc3, 0x1e, 0xfd, 0xae, 0xa0, 0x54, 0x86, 0x42, 0x72, 0xc1, 0x15, 0x4e, 0x4c,
+	0xd4, 0x3f, 0xa9, 0x80, 0x4b, 0x49, 0x95, 0xe0, 0x4c, 0x51, 0x1b, 0xed, 0x15, 0x51, 0x2d, 0x31,
+	0x53, 0x78, 0xad, 0x63, 0xce, 0x2c, 0xde, 0x5d, 0xf3, 0x34, 0xe5, 0x2c, 0x34, 0x1f, 0x03, 0x06,
+	0xbf, 0x3c, 0x68, 0x4f, 0x18, 0xe1, 0x52, 0xd1, 0x39, 0xfd, 0x92, 0x51, 0xa5, 0xd1, 0x39, 0xb4,
+	0x4b, 0xe4, 0x65, 0x4c, 0xfa, 0xde, 0x99, 0x37, 0x68, 0xce, 0x5b, 0x25, 0x74, 0x4a, 0xd0, 0x29,
+	0xc0, 0x7a, 0x83, 0x19, 0xa3, 0x49, 0x9e, 0x52, 0x2b, 0x52, 0x9a, 0x16, 0x99, 0x12, 0x34, 0x85,
+	0x43, 0x23, 0x90, 0x92, 0x65, 0x89, 0xd8, 0xdf, 0x3b, 0xf3, 0x06, 0xfb, 0xa3, 0x9e, 0xf9, 0xbd,
+	0x1a, 0x2e, 0xe2, 0x88, 0x51, 0x32, 0xb3, 0xad, 0xcc, 0xbb, 0x8e, 0x73, 0xbd, 0xa3, 0x04, 0xdf,
+	0x3d, 0x78, 0xb1, 0xd5, 0x68, 0x5a, 0x45, 0x03, 0xa8, 0x4b, 0xaa, 0xb2, 0x44, 0x17, 0xe2, 0xf6,
+	0x47, 0x1d, 0x57, 0xd0, 0x65, 0xcc, 0x6d, 0x1c, 0x8d, 0x73, 0x21, 0x54, 0x60, 0xf9, 0x97, 0x90,
+	0x9a, 0xe5, 0xd9, 0x71, 0x4c, 0xd8, 0x2d, 0x4d, 0xb8, 0xa0, 0xb9, 0x04, 0x93, 0x5d, 0x96, 0xf0,
+	0xd3, 0x83, 0xd6, 0x22, 0x5b, 0xa5, 0xb1, 0x7e, 0xde, 0x29, 0x3d, 0x26, 0x6e, 0xef, 0x29, 0xe2,
+	0x3a, 0xd0, 0x76, 0xda, 0x4c, 0xef, 0xc1, 0x27, 0xe8, 0x8e, 0x79, 0x9a, 0xc6, 0x7a, 0xa1, 0xb1,
+	0xce, 0xd4, 0xb3, 0x6a, 0x0e, 0xde, 0xc3, 0x61, 0xb5, 0xb8, 0x5d, 0xc9, 0xab, 0xca, 0x4a, 0xda,
+	0xa3, 0xbe, 0x5b, 0xc9, 0xf5, 0xb7, 0x8f, 0x38, 0x89, 0x09, 0xce, 0xcb, 0x8f, 0x39, 0xd9, 0xae,
+	0x26, 0xf8, 0x9d, 0x2f, 0xf6, 0x16, 0x27, 0x19, 0xd6, 0xff, 0xae, 0xfb, 0x2e, 0xa1, 0xb3, 0xd3,
+	0xf8, 0x54, 0xf7, 0x05, 0x37, 0xd0, 0x9a, 0x30, 0x22, 0x78, 0xcc, 0xf4, 0x44, 0x4a, 0x2e, 0x51,
+	0x1f, 0x1a, 0x98, 0x10, 0x49, 0x95, 0xb2, 0x8d, 0xb9, 0x23, 0x3a, 0x82, 0x7a, 0xaa, 0xc4, 0xae,
+	0x9d, 0xff, 0x52, 0x25, 0xa6, 0x24, 0x27, 0xa4, 0x54, 0x29, 0x1c, 0xd1, 0x42, 0x7d, 0x73, 0xee,
+	0x8e, 0xa3, 0x1f, 0x35, 0x68, 0xbc, 0x33, 0xef, 0x04, 0xba, 0x84, 0x86, 0xbd, 0x22, 0xe8, 0x78,
+	0xe8, 0xde, 0x92, 0xea, 0xc5, 0xf6, 0xfb, 0xf7, 0x03, 0xb6, 0x9f, 0x37, 0x50, 0x37, 0x0e, 0x42,
+	0xbd, 0x6d, 0x4e, 0xc5, 0xee, 0xfe, 0xf1, 0x3d, 0xdc, 0x52, 0x3f, 0xc0, 0x41, 0xd9, 0x0d, 0xe8,
+	0x64, 0x9b, 0xf8, 0x80, 0x03, 0xfd, 0xd3, 0x47, 0xa2, 0xb6, 0xd8, 0x5b, 0xf8, 0xdf, 0xcd, 0x1a,
+	0x95, 0xd4, 0x56, 0x2d, 0xe2, 0xbf, 0x7c, 0x20, 0x62, 0x0a, 0x5c, 0x6d, 0xe0, 0x9c, 0xcb, 0x68,
+	0xb8, 0xb9, 0x13, 0x54, 0x26, 0x94, 0x44, 0x54, 0x0e, 0x3f, 0xe3, 0x95, 0x8c, 0xd7, 0x6e, 0x41,
+	0x96, 0x79, 0x75, 0x60, 0x07, 0x37, 0xcb, 0xe1, 0x99, 0x77, 0x13, 0x46, 0xb1, 0xde, 0x64, 0xab,
+	0xfc, 0xc2, 0x85, 0x25, 0x76, 0x68, 0xd8, 0x17, 0x86, 0x7d, 0x11, 0x71, 0xf7, 0x4e, 0xaf, 0xea,
+	0x05, 0xf4, 0xfa, 0x4f, 0x00, 0x00, 0x00, 0xff, 0xff, 0x3c, 0x7f, 0x72, 0xba, 0xc1, 0x05, 0x00,
 	0x00,
 }
 
@@ -352,27 +551,27 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type GatewayClient interface {
-	// The Endorse service passes the ProposedTransaction (which contains the signed proposal)
-	// to the gateway in order to obtain sufficient endorsement.
+	// The Endorse service passes a proposed transaction to the gateway in order to
+	// obtain sufficient endorsement.
 	// The gateway will determine the endorsement plan for the requested chaincode and
 	// forward to the appropriate peers for endorsement. It will return to the client a
-	// PreparedTransaction message which contains a Envelope message as defined
-	// in fabric-protos/common/common.proto.  The client must sign the contents of this
-	// envelope before invoking the Submit service
-	Endorse(ctx context.Context, in *ProposedTransaction, opts ...grpc.CallOption) (*PreparedTransaction, error)
-	// Ths Submit service will process the PreparedTransaction message returned from Endorse service
-	// once it has been signed by the client. A stream is opened to return multiple return values.
-	// - The Gateway will register transaction event listeners for the given channel/txId.
-	// - It will then broadcast the Envelope to the ordering service.
-	// - The success/error response is passed back to the client in the stream
-	// - The Gateway awaits sufficient transaction commit events before returning and closing the stream,
-	//   indicating to the client that transaction has been committed.
-	Submit(ctx context.Context, in *PreparedTransaction, opts ...grpc.CallOption) (Gateway_SubmitClient, error)
-	// The Evaluate service passes the ProposedTransaction (which contains the signed proposal)
-	// to the gateway in order to invoke the transaction function and return the result to the client.
-	// No ledger updates are make.  The gateway will select an appropriate peer to query based on
-	// block height and load.
-	Evaluate(ctx context.Context, in *ProposedTransaction, opts ...grpc.CallOption) (*Result, error)
+	// prepared transaction in the form of an Envelope message as defined
+	// in common/common.proto. The client must sign the contents of this envelope
+	// before invoking the Submit service
+	Endorse(ctx context.Context, in *EndorseRequest, opts ...grpc.CallOption) (*EndorseResponse, error)
+	// The Submit service will process the prepared transaction returned from Endorse service
+	// once it has been signed by the client. It will wait for the transaction to be submitted to the
+	// ordering service but the client must invoke the CommitStatus service to wait for the transaction
+	// to be committed.
+	Submit(ctx context.Context, in *SubmitRequest, opts ...grpc.CallOption) (*SubmitResponse, error)
+	// The CommitStatus service will indicate whether a prepared transaction previously submitted to
+	// the Submit sevice has been committed. It will wait for the commit to occur if it hasn’t already
+	// committed.
+	CommitStatus(ctx context.Context, in *CommitStatusRequest, opts ...grpc.CallOption) (*CommitStatusResponse, error)
+	// The Evaluate service passes a proposed transaction to the gateway in order to invoke the
+	// transaction function and return the result to the client. No ledger updates are made.
+	// The gateway will select an appropriate peer to query based on block height and load.
+	Evaluate(ctx context.Context, in *EvaluateRequest, opts ...grpc.CallOption) (*EvaluateResponse, error)
 }
 
 type gatewayClient struct {
@@ -383,8 +582,8 @@ func NewGatewayClient(cc *grpc.ClientConn) GatewayClient {
 	return &gatewayClient{cc}
 }
 
-func (c *gatewayClient) Endorse(ctx context.Context, in *ProposedTransaction, opts ...grpc.CallOption) (*PreparedTransaction, error) {
-	out := new(PreparedTransaction)
+func (c *gatewayClient) Endorse(ctx context.Context, in *EndorseRequest, opts ...grpc.CallOption) (*EndorseResponse, error) {
+	out := new(EndorseResponse)
 	err := c.cc.Invoke(ctx, "/gateway.Gateway/Endorse", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -392,40 +591,26 @@ func (c *gatewayClient) Endorse(ctx context.Context, in *ProposedTransaction, op
 	return out, nil
 }
 
-func (c *gatewayClient) Submit(ctx context.Context, in *PreparedTransaction, opts ...grpc.CallOption) (Gateway_SubmitClient, error) {
-	stream, err := c.cc.NewStream(ctx, &_Gateway_serviceDesc.Streams[0], "/gateway.Gateway/Submit", opts...)
+func (c *gatewayClient) Submit(ctx context.Context, in *SubmitRequest, opts ...grpc.CallOption) (*SubmitResponse, error) {
+	out := new(SubmitResponse)
+	err := c.cc.Invoke(ctx, "/gateway.Gateway/Submit", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &gatewaySubmitClient{stream}
-	if err := x.ClientStream.SendMsg(in); err != nil {
+	return out, nil
+}
+
+func (c *gatewayClient) CommitStatus(ctx context.Context, in *CommitStatusRequest, opts ...grpc.CallOption) (*CommitStatusResponse, error) {
+	out := new(CommitStatusResponse)
+	err := c.cc.Invoke(ctx, "/gateway.Gateway/CommitStatus", in, out, opts...)
+	if err != nil {
 		return nil, err
 	}
-	if err := x.ClientStream.CloseSend(); err != nil {
-		return nil, err
-	}
-	return x, nil
+	return out, nil
 }
 
-type Gateway_SubmitClient interface {
-	Recv() (*Event, error)
-	grpc.ClientStream
-}
-
-type gatewaySubmitClient struct {
-	grpc.ClientStream
-}
-
-func (x *gatewaySubmitClient) Recv() (*Event, error) {
-	m := new(Event)
-	if err := x.ClientStream.RecvMsg(m); err != nil {
-		return nil, err
-	}
-	return m, nil
-}
-
-func (c *gatewayClient) Evaluate(ctx context.Context, in *ProposedTransaction, opts ...grpc.CallOption) (*Result, error) {
-	out := new(Result)
+func (c *gatewayClient) Evaluate(ctx context.Context, in *EvaluateRequest, opts ...grpc.CallOption) (*EvaluateResponse, error) {
+	out := new(EvaluateResponse)
 	err := c.cc.Invoke(ctx, "/gateway.Gateway/Evaluate", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -435,40 +620,43 @@ func (c *gatewayClient) Evaluate(ctx context.Context, in *ProposedTransaction, o
 
 // GatewayServer is the server API for Gateway service.
 type GatewayServer interface {
-	// The Endorse service passes the ProposedTransaction (which contains the signed proposal)
-	// to the gateway in order to obtain sufficient endorsement.
+	// The Endorse service passes a proposed transaction to the gateway in order to
+	// obtain sufficient endorsement.
 	// The gateway will determine the endorsement plan for the requested chaincode and
 	// forward to the appropriate peers for endorsement. It will return to the client a
-	// PreparedTransaction message which contains a Envelope message as defined
-	// in fabric-protos/common/common.proto.  The client must sign the contents of this
-	// envelope before invoking the Submit service
-	Endorse(context.Context, *ProposedTransaction) (*PreparedTransaction, error)
-	// Ths Submit service will process the PreparedTransaction message returned from Endorse service
-	// once it has been signed by the client. A stream is opened to return multiple return values.
-	// - The Gateway will register transaction event listeners for the given channel/txId.
-	// - It will then broadcast the Envelope to the ordering service.
-	// - The success/error response is passed back to the client in the stream
-	// - The Gateway awaits sufficient transaction commit events before returning and closing the stream,
-	//   indicating to the client that transaction has been committed.
-	Submit(*PreparedTransaction, Gateway_SubmitServer) error
-	// The Evaluate service passes the ProposedTransaction (which contains the signed proposal)
-	// to the gateway in order to invoke the transaction function and return the result to the client.
-	// No ledger updates are make.  The gateway will select an appropriate peer to query based on
-	// block height and load.
-	Evaluate(context.Context, *ProposedTransaction) (*Result, error)
+	// prepared transaction in the form of an Envelope message as defined
+	// in common/common.proto. The client must sign the contents of this envelope
+	// before invoking the Submit service
+	Endorse(context.Context, *EndorseRequest) (*EndorseResponse, error)
+	// The Submit service will process the prepared transaction returned from Endorse service
+	// once it has been signed by the client. It will wait for the transaction to be submitted to the
+	// ordering service but the client must invoke the CommitStatus service to wait for the transaction
+	// to be committed.
+	Submit(context.Context, *SubmitRequest) (*SubmitResponse, error)
+	// The CommitStatus service will indicate whether a prepared transaction previously submitted to
+	// the Submit sevice has been committed. It will wait for the commit to occur if it hasn’t already
+	// committed.
+	CommitStatus(context.Context, *CommitStatusRequest) (*CommitStatusResponse, error)
+	// The Evaluate service passes a proposed transaction to the gateway in order to invoke the
+	// transaction function and return the result to the client. No ledger updates are made.
+	// The gateway will select an appropriate peer to query based on block height and load.
+	Evaluate(context.Context, *EvaluateRequest) (*EvaluateResponse, error)
 }
 
 // UnimplementedGatewayServer can be embedded to have forward compatible implementations.
 type UnimplementedGatewayServer struct {
 }
 
-func (*UnimplementedGatewayServer) Endorse(ctx context.Context, req *ProposedTransaction) (*PreparedTransaction, error) {
+func (*UnimplementedGatewayServer) Endorse(ctx context.Context, req *EndorseRequest) (*EndorseResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Endorse not implemented")
 }
-func (*UnimplementedGatewayServer) Submit(req *PreparedTransaction, srv Gateway_SubmitServer) error {
-	return status.Errorf(codes.Unimplemented, "method Submit not implemented")
+func (*UnimplementedGatewayServer) Submit(ctx context.Context, req *SubmitRequest) (*SubmitResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Submit not implemented")
 }
-func (*UnimplementedGatewayServer) Evaluate(ctx context.Context, req *ProposedTransaction) (*Result, error) {
+func (*UnimplementedGatewayServer) CommitStatus(ctx context.Context, req *CommitStatusRequest) (*CommitStatusResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CommitStatus not implemented")
+}
+func (*UnimplementedGatewayServer) Evaluate(ctx context.Context, req *EvaluateRequest) (*EvaluateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Evaluate not implemented")
 }
 
@@ -477,7 +665,7 @@ func RegisterGatewayServer(s *grpc.Server, srv GatewayServer) {
 }
 
 func _Gateway_Endorse_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ProposedTransaction)
+	in := new(EndorseRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -489,34 +677,49 @@ func _Gateway_Endorse_Handler(srv interface{}, ctx context.Context, dec func(int
 		FullMethod: "/gateway.Gateway/Endorse",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GatewayServer).Endorse(ctx, req.(*ProposedTransaction))
+		return srv.(GatewayServer).Endorse(ctx, req.(*EndorseRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Gateway_Submit_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(PreparedTransaction)
-	if err := stream.RecvMsg(m); err != nil {
-		return err
+func _Gateway_Submit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SubmitRequest)
+	if err := dec(in); err != nil {
+		return nil, err
 	}
-	return srv.(GatewayServer).Submit(m, &gatewaySubmitServer{stream})
+	if interceptor == nil {
+		return srv.(GatewayServer).Submit(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/gateway.Gateway/Submit",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GatewayServer).Submit(ctx, req.(*SubmitRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
-type Gateway_SubmitServer interface {
-	Send(*Event) error
-	grpc.ServerStream
-}
-
-type gatewaySubmitServer struct {
-	grpc.ServerStream
-}
-
-func (x *gatewaySubmitServer) Send(m *Event) error {
-	return x.ServerStream.SendMsg(m)
+func _Gateway_CommitStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CommitStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GatewayServer).CommitStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/gateway.Gateway/CommitStatus",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GatewayServer).CommitStatus(ctx, req.(*CommitStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Gateway_Evaluate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ProposedTransaction)
+	in := new(EvaluateRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -528,7 +731,7 @@ func _Gateway_Evaluate_Handler(srv interface{}, ctx context.Context, dec func(in
 		FullMethod: "/gateway.Gateway/Evaluate",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GatewayServer).Evaluate(ctx, req.(*ProposedTransaction))
+		return srv.(GatewayServer).Evaluate(ctx, req.(*EvaluateRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -542,16 +745,18 @@ var _Gateway_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Gateway_Endorse_Handler,
 		},
 		{
+			MethodName: "Submit",
+			Handler:    _Gateway_Submit_Handler,
+		},
+		{
+			MethodName: "CommitStatus",
+			Handler:    _Gateway_CommitStatus_Handler,
+		},
+		{
 			MethodName: "Evaluate",
 			Handler:    _Gateway_Evaluate_Handler,
 		},
 	},
-	Streams: []grpc.StreamDesc{
-		{
-			StreamName:    "Submit",
-			Handler:       _Gateway_Submit_Handler,
-			ServerStreams: true,
-		},
-	},
+	Streams:  []grpc.StreamDesc{},
 	Metadata: "gateway/gateway.proto",
 }
