@@ -5,8 +5,8 @@ package common
 
 import (
 	fmt "fmt"
+	msp "github.com/SmartBFT-Go/fabric-protos-go/msp"
 	proto "github.com/golang/protobuf/proto"
-	msp "github.com/hyperledger/fabric-protos-go/msp"
 	math "math"
 )
 

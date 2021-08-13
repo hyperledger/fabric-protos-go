@@ -6,9 +6,9 @@ package discovery
 import (
 	context "context"
 	fmt "fmt"
+	gossip "github.com/SmartBFT-Go/fabric-protos-go/gossip"
+	msp "github.com/SmartBFT-Go/fabric-protos-go/msp"
 	proto "github.com/golang/protobuf/proto"
-	gossip "github.com/hyperledger/fabric-protos-go/gossip"
-	msp "github.com/hyperledger/fabric-protos-go/msp"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"

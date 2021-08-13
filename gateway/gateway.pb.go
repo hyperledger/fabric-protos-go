@@ -6,9 +6,9 @@ package gateway
 import (
 	context "context"
 	fmt "fmt"
+	common "github.com/SmartBFT-Go/fabric-protos-go/common"
+	peer "github.com/SmartBFT-Go/fabric-protos-go/peer"
 	proto "github.com/golang/protobuf/proto"
-	common "github.com/hyperledger/fabric-protos-go/common"
-	peer "github.com/hyperledger/fabric-protos-go/peer"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"

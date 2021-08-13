@@ -1,6 +1,6 @@
-module github.com/hyperledger/fabric-protos-go
+module github.com/SmartBFT-Go/fabric-protos-go
 
-go 1.12
+go 1.14
 
 require (
 	github.com/golang/protobuf v1.3.2

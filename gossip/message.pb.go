@@ -6,8 +6,8 @@ package gossip
 import (
 	context "context"
 	fmt "fmt"
+	peer "github.com/SmartBFT-Go/fabric-protos-go/peer"
 	proto "github.com/golang/protobuf/proto"
-	peer "github.com/hyperledger/fabric-protos-go/peer"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
