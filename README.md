@@ -1,5 +1,9 @@
 # Hyperledger Fabric gRPC and Protocol Buffer Bindings for go
 
+IMPORTANT: you should not attempt to make changes to this repository. 
+It is an assembled representation of the [repository][fabric-protos]. 
+If you want to make changes, you must prepare them for the [repository][fabric-protos]
+
 This repository contains the Hyperledger Fabric [grpc] service and [protocol
 buffer][protobuf] bindings for [go].
 
@@ -27,3 +31,4 @@ Hyperledger Project source code files are made available under the Apache Licens
 [protobuf]: https://github.com/protocolbuffers/protobuf/
 [rocketchat-image]: https://open.rocket.chat/images/join-chat.svg
 [rocketchat-url]: https://chat.hyperledger.org/channel/fabric
+[fabric-protos]: https://github.com/hyperledger/fabric-protos/
